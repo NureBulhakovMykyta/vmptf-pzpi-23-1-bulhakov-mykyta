@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ article.title }}</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            margin: 40px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .article-title {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .meta {
+            color: gray;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .actions {
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 13px;
+            margin-right: 5px;
+        }
+
+        .edit-btn {
+            background: #3498db;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .content {
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .comment {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+
+        .comment-author {
+            font-weight: bold;
+        }
+
+        .comment-date {
+            font-size: 12px;
+            color: gray;
+        }
+
+        h3 {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="article-title">{{ article.title }}</div>
+
+    <div class="meta">
+        Author: {{ article.author }} |
+        Created: {{ article.created }}
+    </div>
+
+    <div class="actions">
+        {% if user.is_authenticated %}
+            {% if user == article.author or user.is_superuser %}
+
+                <a class="btn edit-btn" href="{% url 'edit_article' article.id %}">
+                    Edit
+                </a>
+
+                <form method="post" action="{% url 'delete_article' article.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn delete-btn">
+                        Delete
+                    </button>
+                </form>
+
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <div class="content">
+        {{ article.content }}
+    </div>
+
+    <hr>
+
+    <h3>Comments ({{ comments|length }})</h3>
+
+    {% for comment in comments %}
+        <div class="comment">
+
+            <!-- DELETE COMMENT -->
+            <form method="post" action="{% url 'delete_comment' comment.id %}">
+                {% csrf_token %}
+                <button type="submit" class="delete-btn">Delete</button>
+            </form>
+
+            <div class="comment-author">
+                {{ comment.author }}
+            </div>
+
+            <div class="comment-date">
+                {{ comment.created }}
+            </div>
+
+            <div class="comment-content">
+                {{ comment.content }}
+            </div>
+
+        </div>
+    {% empty %}
+        <p>No comments yet.</p>
+    {% endfor %}
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Article</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f5f5f5;
+            margin: 40px;
+        }
+
+        .box {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        form p {
+            margin-bottom: 15px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            background: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+    <h2>Edit Article</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit" class="btn">Save changes</button>
+    </form>
+
+    <a class="back" href="{% url 'article_page' article.id %}">
+        ← Back to article
+    </a>
+
+</div>
+
+</body>
+</html>
