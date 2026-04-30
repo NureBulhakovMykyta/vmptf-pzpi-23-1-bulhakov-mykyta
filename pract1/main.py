@@ -35,7 +35,7 @@ if __name__ == '__main__':
     task1(1353, 62, 334)
     print(task2("hello"))
 
-    test_str = "аргентина манит негра"
+    test_str = "А роза упала на лапу Азора"
     print(f"Is palindrome? {task3(test_str)}")
 
     data = [8, 7, 2, 1, 0, 9, 6]
