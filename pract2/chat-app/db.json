@@ -1,0 +1,78 @@
+{
+  "users": [
+    {
+      "username": "qwerty",
+      "password": "ytrewq",
+      "info": "guitarist_2.0",
+      "id": "Yuy_hJBZ5DU"
+    },
+    {
+      "username": "mykyta",
+      "password": "qwerty12345",
+      "info": "musician",
+      "id": "F8YOJddvTFg"
+    }
+  ],
+  "rooms": [
+    {
+      "id": "1",
+      "name": "Global chat"
+    },
+    {
+      "name": "mykyta test room",
+      "id": "GbksJLmsVG0"
+    }
+  ],
+  "messages": [
+    {
+      "roomId": "1",
+      "author": "qwerty",
+      "text": "123",
+      "time": "22:51:29",
+      "id": "MGsZJFhJV2g"
+    },
+    {
+      "roomId": "1",
+      "author": "qwerty",
+      "text": "123",
+      "time": "22:51:37",
+      "id": "YZVfpoennGM"
+    },
+    {
+      "roomId": "1",
+      "author": "qwerty",
+      "text": "432",
+      "time": "22:51:41",
+      "id": "HUKqUtKBCL8"
+    },
+    {
+      "roomId": "1",
+      "author": "qwerty",
+      "text": "543",
+      "time": "22:51:43",
+      "id": "uoP0YLxIhGs"
+    },
+    {
+      "roomId": "1",
+      "author": "mykyta",
+      "text": "hello",
+      "time": "22:59:26",
+      "id": "hnGgdyQmwk0"
+    },
+    {
+      "roomId": "GbksJLmsVG0",
+      "author": "mykyta",
+      "text": "hello world",
+      "time": "23:00:18",
+      "id": "1HzbqUIPnas"
+    },
+    {
+      "roomId": "GbksJLmsVG0",
+      "author": "qwerty",
+      "text": "hi",
+      "time": "23:00:34",
+      "id": "B6X9qhVq9m0"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

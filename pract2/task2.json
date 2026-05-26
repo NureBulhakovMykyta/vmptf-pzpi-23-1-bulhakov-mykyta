@@ -1,0 +1,17 @@
+[
+    {
+        "name": "Mykyta",
+        "age": 20,
+        "country": "Ukraine"
+    },
+    {
+        "name": "Peter",
+        "age": 21,
+        "country": "Germany"
+    },
+    {
+        "name": "Oleh",
+        "age": 19,
+        "country": "Czech Republic"
+    }
+]

@@ -1,0 +1,49 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  padding: 20px;
+}
+
+.container {
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 20px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+div {
+  margin-bottom: 10px;
+}
+
+button {
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.header {
+  border-bottom: 1px solid black;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.room-list li {
+  margin-bottom: 10px;
+  border: 1px dashed #aaa;
+  padding: 5px;
+}
+
+.chat-box {
+  border: 1px solid black;
+  height: 300px;
+  overflow-y: scroll;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #fafafa;
+}
+
+.message {
+  margin-bottom: 10px;
+  border-bottom: 1px dotted #ccc;
+  padding-bottom: 5px;
+}
