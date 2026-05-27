@@ -11,6 +11,18 @@
       "password": "qwerty12345",
       "info": "musician",
       "id": "F8YOJddvTFg"
+    },
+    {
+      "username": "mykyta",
+      "password": "asdfg",
+      "info": "test",
+      "id": "Ca0qg6viopA"
+    },
+    {
+      "username": "mykyta",
+      "password": "asdfg",
+      "info": "12345",
+      "id": "K63_MrnwmMg"
     }
   ],
   "rooms": [

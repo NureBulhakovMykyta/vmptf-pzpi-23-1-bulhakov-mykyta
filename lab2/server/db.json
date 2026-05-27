@@ -1,0 +1,94 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "$2a$10$N1eD27lB.J9tB/5S9n.hOeX.T5vOqz0c.F.V/2o4.nQ0T6/qGgV0C",
+      "friends": [
+        "student_ua"
+      ]
+    },
+    {
+      "id": 2,
+      "username": "student_ua",
+      "password": "$2a$10$N1eD27lB.J9tB/5S9n.hOeX.T5vOqz0c.F.V/2o4.nQ0T6/qGgV0C",
+      "friends": [
+        "admin"
+      ]
+    },
+    {
+      "id": 1779833417264,
+      "username": "mykyta",
+      "password": "$2b$10$U5glEXe1waxTr1zVLftV0uJApBf4esRpLRGLUTpH7OhABQDVsFY1u",
+      "friends": [
+        "test_user"
+      ]
+    },
+    {
+      "id": 1779833516284,
+      "username": "test_user",
+      "password": "$2b$10$go.YIvxA8tQiml9ytFC1teIHicPJ8rqa9kHawHWx/dhRSXwZAHDA.",
+      "friends": [
+        "mykyta"
+      ]
+    }
+  ],
+  "posts": [
+    {
+      "id": 1779833587296,
+      "author": "mykyta",
+      "text": "my new post",
+      "comments": [
+        {
+          "id": 1779833624877,
+          "author": "test_user",
+          "text": "cool"
+        }
+      ]
+    },
+    {
+      "id": 101,
+      "author": "admin",
+      "text": "admin post",
+      "comments": [
+        {
+          "id": 201,
+          "author": "student_ua",
+          "text": "WW"
+        }
+      ]
+    },
+    {
+      "id": 102,
+      "author": "student_ua",
+      "text": "student_ua's first post",
+      "comments": []
+    }
+  ],
+  "messages": [
+    {
+      "id": 301,
+      "sender": "admin",
+      "receiver": "student_ua",
+      "text": "test_message"
+    },
+    {
+      "id": 302,
+      "sender": "student_ua",
+      "receiver": "admin",
+      "text": "response_message"
+    },
+    {
+      "id": 1779833524891,
+      "sender": "test_user",
+      "receiver": "mykyta",
+      "text": "hiiiii"
+    },
+    {
+      "id": 1779833550812,
+      "sender": "mykyta",
+      "receiver": "test_user",
+      "text": "qwerty"
+    }
+  ]
+}
