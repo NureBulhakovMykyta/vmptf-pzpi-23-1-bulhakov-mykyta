@@ -23,6 +23,12 @@
       "password": "asdfg",
       "info": "12345",
       "id": "K63_MrnwmMg"
+    },
+    {
+      "username": "test_acc_1",
+      "password": "123qwe",
+      "info": "qwertlasdkfjghn",
+      "id": "jlfxxwQU_dY"
     }
   ],
   "rooms": [
@@ -33,6 +39,10 @@
     {
       "name": "mykyta test room",
       "id": "GbksJLmsVG0"
+    },
+    {
+      "name": "new room",
+      "id": "ddcASwYopMs"
     }
   ],
   "messages": [
@@ -84,6 +94,20 @@
       "text": "hi",
       "time": "23:00:34",
       "id": "B6X9qhVq9m0"
+    },
+    {
+      "roomId": "ddcASwYopMs",
+      "author": "test_acc_1",
+      "text": "123lkjh",
+      "time": "08:31:21",
+      "id": "jk_RfFhFmW4"
+    },
+    {
+      "roomId": "ddcASwYopMs",
+      "author": "mykyta",
+      "text": "hii",
+      "time": "08:31:57",
+      "id": "nhZuvLrQYM4"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

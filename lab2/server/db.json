@@ -21,13 +21,22 @@
       "username": "mykyta",
       "password": "$2b$10$U5glEXe1waxTr1zVLftV0uJApBf4esRpLRGLUTpH7OhABQDVsFY1u",
       "friends": [
-        "test_user"
+        "test_user",
+        "Tony"
       ]
     },
     {
       "id": 1779833516284,
       "username": "test_user",
       "password": "$2b$10$go.YIvxA8tQiml9ytFC1teIHicPJ8rqa9kHawHWx/dhRSXwZAHDA.",
+      "friends": [
+        "mykyta"
+      ]
+    },
+    {
+      "id": 1779860223190,
+      "username": "Tony",
+      "password": "$2b$10$cmTFIm3DocL9FA.36fIgPOji02d2BnG3dckTYf5I6dEia8e4K/gka",
       "friends": [
         "mykyta"
       ]
@@ -89,6 +98,18 @@
       "sender": "mykyta",
       "receiver": "test_user",
       "text": "qwerty"
+    },
+    {
+      "id": 1779860319179,
+      "sender": "Tony",
+      "receiver": "mykyta",
+      "text": "hii"
+    },
+    {
+      "id": 1779860338303,
+      "sender": "mykyta",
+      "receiver": "Tony",
+      "text": "response"
     }
   ]
 }

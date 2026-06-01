@@ -52,5 +52,12 @@ fun MainMenuScreen() {
         ) {
             Text("2. Гра «Вгадай число»")
         }
+
+        Button(
+            onClick = { context.startActivity(Intent(context, Task34Activity::class.java)) },
+            modifier = Modifier.fillMaxWidth(0.7f).padding(top = 16.dp)
+        ) {
+            Text("3-4. Калькулятор")
+        }
     }
 }
