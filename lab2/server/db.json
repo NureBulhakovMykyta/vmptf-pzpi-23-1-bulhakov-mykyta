@@ -40,6 +40,18 @@
       "friends": [
         "mykyta"
       ]
+    },
+    {
+      "id": 1780425123485,
+      "username": "test_android",
+      "password": "$2b$10$z9L6oSBQKAVQX4YqekCuSO38q7S1L2/mqW7yzww.coNFzhZuVTF/G",
+      "friends": []
+    },
+    {
+      "id": 1780426897701,
+      "username": "test_web",
+      "password": "$2b$10$a7UusCkT.BFg1tsUreEiUOqX9Yhdg7GxBfKb7c7EHcuNLoAiaZq5O",
+      "friends": []
     }
   ],
   "posts": [
@@ -52,6 +64,11 @@
           "id": 1779833624877,
           "author": "test_user",
           "text": "cool"
+        },
+        {
+          "id": 1780425131263,
+          "author": "test_android",
+          "text": "WW"
         }
       ]
     },

@@ -23,21 +23,75 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState(null);
 
+  const [filterSearch, setFilterSearch] = useState('');
+  const [filterAuthor, setFilterAuthor] = useState('');
+  const [filterSort, setFilterSort] = useState('newest');
+
+  const [showLogs, setShowLogs] = useState(false);
+  const [logsData, setLogsData] = useState([]);
+
   useEffect(() => { if (currentUser) fetchData(); }, [currentUser]);
   useEffect(() => { if (chatUser) fetchMessages(); }, [chatUser]);
 
   const fetchData = async () => {
     try {
-      const postsRes = await fetch('http://localhost:3001/api/posts');
-      setPosts(await postsRes.json());
+      let url = new URL('http://localhost:3001/api/posts');
+      if (filterSearch) url.searchParams.append('search', filterSearch);
+      if (filterAuthor) url.searchParams.append('author', filterAuthor);
+      if (filterSort) url.searchParams.append('sortBy', filterSort);
+
+      const postsRes = await fetch(url.toString());
+      const postsData = await postsRes.json();
+      
+      if (Array.isArray(postsData)) {
+        setPosts(postsData);
+      } else {
+        setPosts([]);
+      }
+
       const usersRes = await fetch('http://localhost:3001/api/users');
-      const loadedUsers = await usersRes.json();
-      setUsers(loadedUsers);
-      setCurrentUser(prev => {
-        if (!prev) return null;
-        return loadedUsers.find(u => u.username === prev.username) || prev;
-      });
-    } catch (error) { console.error(error); }
+      const usersData = await usersRes.json();
+      
+      if (Array.isArray(usersData)) {
+        setUsers(usersData);
+        setCurrentUser(prev => {
+          if (!prev) return null;
+          const updatedMe = usersData.find(u => u.username === prev.username);
+          return updatedMe ? { ...prev, ...updatedMe } : prev;
+        });
+      }
+    } catch (error) { 
+      console.error(error); 
+    }
+  };
+
+  const fetchLogs = async () => {
+    try {
+      const res = await fetch(`http://localhost:3001/api/logs?adminUser=${currentUser.username}`);
+      const data = await res.json();
+      if (data.error) {
+        alert(data.error);
+      } else {
+        setLogsData(data);
+        setShowLogs(true);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const applyFilters = (e) => {
+    if (e) e.preventDefault();
+    fetchData();
+  };
+
+  const resetFilters = () => {
+    setFilterSearch('');
+    setFilterAuthor('');
+    setFilterSort('newest');
+    fetch('http://localhost:3001/api/posts')
+      .then(res => res.json())
+      .then(data => setPosts(Array.isArray(data) ? data : []));
   };
 
   const handleAuth = async (e) => {
@@ -142,8 +196,19 @@ function App() {
           <button type="submit">Знайти</button>
           {searchResults && <button type="button" className="clear-btn" onClick={() => { setSearchResults(null); setSearchQuery(''); }}>Скас.</button>}
         </form>
-        <div className="user-info">
-          <span>Привіт, <b>{currentUser.username}</b></span>
+        <div className="user-info" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <span>Привіт, <b>{currentUser.username}</b>!</span>
+          
+          {currentUser.role === 'admin' && (
+            <button 
+              type="button" 
+              onClick={() => showLogs ? setShowLogs(false) : fetchLogs()} 
+              style={{ background: '#333', color: 'white', padding: '5px 10px', borderRadius: '4px', border: 'none', cursor: 'pointer' }}
+            >
+              {showLogs ? '⬅ Назад до сайту' : '⚙️ Моніторинг (Логи)'}
+            </button>
+          )}
+
           <button type="button" className="logout-btn" onClick={handleLogout}>Вийти</button>
         </div>
       </header>
@@ -171,77 +236,172 @@ function App() {
         </aside>
 
         <main className="feed">
-          {!searchResults && (
-            <div className="create-post">
-              <h3>Створити публікацію</h3>
-              <form onSubmit={handleCreatePost}>
-                <textarea placeholder="Напишіть щось..." value={newPostText} onChange={(e) => setNewPostText(e.target.value)} required />
-                <button type="submit">Опублікувати</button>
-              </form>
+          {showLogs ? (
+            <div className="admin-logs" style={{ background: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+              <h2 style={{ marginTop: 0 }}>Системні Логи (Останні 100 запитів)</h2>
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}>
+                <thead>
+                  <tr style={{ borderBottom: '2px solid #ccc', background: '#f4f6f8' }}>
+                    <th style={{ padding: '10px' }}>Метод</th>
+                    <th style={{ padding: '10px' }}>URL (Ендпоінт)</th>
+                    <th style={{ padding: '10px' }}>Статус</th>
+                    <th style={{ padding: '10px' }}>Час виконання</th>
+                    <th style={{ padding: '10px' }}>Дата</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {logsData.map(log => (
+                    <tr key={log.id} style={{ borderBottom: '1px solid #eee' }}>
+                      <td style={{ padding: '10px', fontWeight: 'bold', color: log.method === 'DELETE' ? 'red' : (log.method === 'POST' ? 'green' : 'blue') }}>
+                        {log.method}
+                      </td>
+                      <td style={{ padding: '10px' }}>{log.url}</td>
+                      <td style={{ padding: '10px', color: log.status >= 400 ? 'red' : 'green', fontWeight: 'bold' }}>
+                        {log.status}
+                      </td>
+                      <td style={{ padding: '10px' }}>{log.response_time_ms} ms</td>
+                      <td style={{ padding: '10px', color: '#666' }}>
+                        {new Date(log.created_at).toLocaleString('uk-UA')}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-          )}
+          ) : (
+            <>
+              <div className="filter-panel" style={{ background: 'white', padding: '15px', borderRadius: '8px', marginBottom: '20px', display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                <b>Фільтри:</b>
+                <input 
+                  type="text" 
+                  placeholder="Слово в пості..." 
+                  value={filterSearch} 
+                  onChange={e => setFilterSearch(e.target.value)} 
+                  style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', flex: 1 }}
+                />
+                <input 
+                  type="text" 
+                  placeholder="Ім'я автора..." 
+                  value={filterAuthor} 
+                  onChange={e => setFilterAuthor(e.target.value)} 
+                  style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', flex: 1 }}
+                />
+                <select 
+                  value={filterSort} 
+                  onChange={e => setFilterSort(e.target.value)}
+                  style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                >
+                  <option value="newest">Спочатку нові</option>
+                  <option value="popular">Популярні (Лайки)</option>
+                </select>
+                <button onClick={applyFilters} type="button" style={{ padding: '8px 15px', background: '#1877f2', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Застосувати</button>
+                <button onClick={resetFilters} type="button" style={{ padding: '8px 15px', background: '#e4e6eb', color: '#333', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Скинути</button>
+              </div>
 
-          <div className="posts">
-            <h3>{searchResults ? 'Результати пошуку:' : 'Стрічка'}</h3>
-            {displayPosts.map(post => {
-              const isMyPost = post.author === currentUser.username;
-              const isEditingThisPost = editingPost === post.id;
+              {!searchResults && (
+                <div className="create-post" style={{ marginBottom: '20px' }}>
+                  <h3>Що нового?</h3>
+                  <form onSubmit={handleCreatePost}>
+                    <textarea 
+                      placeholder="Напишіть щось..." 
+                      value={newPostText} 
+                      onChange={(e) => setNewPostText(e.target.value)} 
+                      required 
+                    />
+                    <button type="submit">Опублікувати</button>
+                  </form>
+                </div>
+              )}
 
-              return (
-                <div key={post.id} className="post-card">
-                  <div className="post-header">
-                    <span className="post-author"><b>{post.author}</b> пише:</span>
-                    {isMyPost && !isEditingThisPost && (
-                      <div className="actions">
-                        <button onClick={() => { setEditingPost(post.id); setEditPostText(post.text); }} className="edit-btn">Ред.</button>
-                        <button onClick={() => handleDeletePost(post.id)} className="delete-btn">Х</button>
+              <div className="posts">
+                <h3>{searchResults ? 'Результати пошуку:' : 'Стрічка новин'}</h3>
+                {displayPosts.map(post => {
+                  const isMyPost = post.author === currentUser.username;
+                  const isEditingThisPost = editingPost === post.id;
+
+                  return (
+                    <div key={post.id} className="post-card">
+                      <div className="post-header">
+                        <span className="post-author"><b>{post.author}</b> пише:</span>
+                        <div className="actions">
+                          <button 
+                            type="button" 
+                            onClick={async () => {
+                              await fetch(`http://localhost:3001/api/posts/${post.id}/likes`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ username: currentUser.username })
+                              });
+                              fetchData();
+                            }} 
+                            style={{ background: '#ff4757', color: 'white', border: 'none', padding: '3px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '11px', marginRight: '5px' }}
+                          >
+                            ❤️ {post.likesCount}
+                          </button>
+
+                          {isMyPost && !isEditingThisPost && (
+                            <>
+                              <button onClick={() => {setEditingPost(post.id); setEditPostText(post.text);}} className="edit-btn">Ред.</button>
+                              <button onClick={() => handleDeletePost(post.id)} className="delete-btn">Х</button>
+                            </>
+                          )}
+                        </div>
                       </div>
-                    )}
-                  </div>
-                  {isEditingThisPost ? (
-                    <div className="edit-box">
-                      <textarea value={editPostText} onChange={(e) => setEditPostText(e.target.value)} />
-                      <button onClick={() => handleSaveEditPost(post.id)}>Ок</button>
-                      <button onClick={() => setEditingPost(null)} className="cancel-btn">Скас.</button>
-                    </div>
-                  ) : <div className="post-text">{post.text}</div>}
 
-                  <div className="comments-section">
-                    <h4>Коментарі:</h4>
-                    {post.comments.map(c => {
-                      const isMyComment = c.author === currentUser.username;
-                      const isEditingThisComment = editingComment === c.id;
-                      return (
-                        <div key={c.id} className="comment">
-                          {isEditingThisComment ? (
-                            <div className="edit-box">
-                              <input type="text" value={editCommentText} onChange={(e) => setEditCommentText(e.target.value)} />
-                              <button onClick={() => handleSaveEditComment(post.id, c.id)}>Ок</button>
-                              <button onClick={() => setEditingComment(null)} className="cancel-btn">X</button>
-                            </div>
-                          ) : (
-                            <div className="comment-content">
-                              <span><b>{c.author}:</b> {c.text}</span>
-                              {isMyComment && (
-                                <div className="actions">
-                                  <button onClick={() => { setEditingComment(c.id); setEditCommentText(c.text) }} className="edit-btn">✎</button>
-                                  <button onClick={() => handleDeleteComment(post.id, c.id)} className="delete-btn">Х</button>
+                      {isEditingThisPost ? (
+                        <div className="edit-box">
+                          <textarea value={editPostText} onChange={(e) => setEditPostText(e.target.value)} />
+                          <button onClick={() => handleSaveEditPost(post.id)}>Зберегти</button>
+                          <button onClick={() => setEditingPost(null)} className="cancel-btn">Скасувати</button>
+                        </div>
+                      ) : (
+                        <div className="post-text">{post.text}</div>
+                      )}
+                      
+                      <div className="comments-section">
+                        <h4>Коментарі ({post.comments.length}):</h4>
+                        {post.comments.map(c => {
+                          const isMyComment = c.author === currentUser.username;
+                          const isEditingThisComment = editingComment === c.id;
+
+                          return (
+                            <div key={c.id} className="comment">
+                              {isEditingThisComment ? (
+                                <div className="edit-box">
+                                  <input type="text" value={editCommentText} onChange={(e) => setEditCommentText(e.target.value)} />
+                                  <button onClick={() => handleSaveEditComment(post.id, c.id)}>Ок</button>
+                                  <button onClick={() => setEditingComment(null)} className="cancel-btn">X</button>
+                                </div>
+                              ) : (
+                                <div className="comment-content">
+                                  <span><b>{c.author}:</b> {c.text}</span>
+                                  {isMyComment && (
+                                    <div className="actions">
+                                      <button onClick={() => {setEditingComment(c.id); setEditCommentText(c.text)}} className="edit-btn">✎</button>
+                                      <button onClick={() => handleDeleteComment(post.id, c.id)} className="delete-btn">Х</button>
+                                    </div>
+                                  )}
                                 </div>
                               )}
                             </div>
-                          )}
+                          )
+                        })}
+                        <div className="add-comment">
+                          <input 
+                            type="text" 
+                            placeholder="Ваш коментар..." 
+                            value={commentInputs[post.id] || ''}
+                            onChange={(e) => setCommentInputs({...commentInputs, [post.id]: e.target.value})}
+                          />
+                          <button onClick={() => handleAddComment(post.id)}>Відправити</button>
                         </div>
-                      )
-                    })}
-                    <div className="add-comment">
-                      <input type="text" placeholder="Коментар..." value={commentInputs[post.id] || ''} onChange={(e) => setCommentInputs({ ...commentInputs, [post.id]: e.target.value })} />
-                      <button onClick={() => handleAddComment(post.id)}>+</button>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </main>
       </div>
 
