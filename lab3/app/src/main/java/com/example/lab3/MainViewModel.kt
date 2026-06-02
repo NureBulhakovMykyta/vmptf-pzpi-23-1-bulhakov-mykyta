@@ -37,7 +37,8 @@ class MainViewModel : ViewModel() {
                 _errorMessage.value = null
                 fetchInitialData()
             } catch (e: Exception) {
-                _errorMessage.value = "Помилка входу. Перевірте логін та пароль."
+                _errorMessage.value = "Помилка: ${e.message}"
+                e.printStackTrace()
             }
         }
     }
