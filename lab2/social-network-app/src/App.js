@@ -35,7 +35,7 @@ function App() {
 
   const fetchData = async () => {
     try {
-      let url = new URL('http://localhost:3001/api/posts');
+      let url = new URL('https://vmptf-lab2-backend.onrender.com/api/posts');
       if (filterSearch) url.searchParams.append('search', filterSearch);
       if (filterAuthor) url.searchParams.append('author', filterAuthor);
       if (filterSort) url.searchParams.append('sortBy', filterSort);
@@ -49,7 +49,7 @@ function App() {
         setPosts([]);
       }
 
-      const usersRes = await fetch('http://localhost:3001/api/users');
+      const usersRes = await fetch('https://vmptf-lab2-backend.onrender.com/api/users');
       const usersData = await usersRes.json();
       
       if (Array.isArray(usersData)) {
@@ -67,7 +67,7 @@ function App() {
 
   const fetchLogs = async () => {
     try {
-      const res = await fetch(`http://localhost:3001/api/logs?adminUser=${currentUser.username}`);
+      const res = await fetch(`https://vmptf-lab2-backend.onrender.com/api/logs?adminUser=${currentUser.username}`);
       const data = await res.json();
       if (data.error) {
         alert(data.error);
@@ -89,7 +89,7 @@ function App() {
     setFilterSearch('');
     setFilterAuthor('');
     setFilterSort('newest');
-    fetch('http://localhost:3001/api/posts')
+    fetch('https://vmptf-lab2-backend.onrender.com/api/posts')
       .then(res => res.json())
       .then(data => setPosts(Array.isArray(data) ? data : []));
   };
@@ -97,7 +97,7 @@ function App() {
   const handleAuth = async (e) => {
     e.preventDefault();
     const endpoint = isLoginMode ? '/api/login' : '/api/register';
-    const res = await fetch(`http://localhost:3001${endpoint}`, {
+    const res = await fetch(`https://vmptf-lab2-backend.onrender.com${endpoint}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username: usernameInput, password: passwordInput })
@@ -114,59 +114,59 @@ function App() {
 
   const handleCreatePost = async (e) => {
     e.preventDefault();
-    await fetch('http://localhost:3001/api/posts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ author: currentUser.username, text: newPostText }) });
+    await fetch('https://vmptf-lab2-backend.onrender.com/api/posts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ author: currentUser.username, text: newPostText }) });
     setNewPostText(''); fetchData();
   };
 
   const handleDeletePost = async (postId) => {
     if (!window.confirm('Видалити пост?')) return;
-    await fetch(`http://localhost:3001/api/posts/${postId}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: currentUser.username }) });
+    await fetch(`https://vmptf-lab2-backend.onrender.com/api/posts/${postId}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: currentUser.username }) });
     fetchData();
   };
 
   const handleSaveEditPost = async (postId) => {
-    await fetch(`http://localhost:3001/api/posts/${postId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: currentUser.username, text: editPostText }) });
+    await fetch(`https://vmptf-lab2-backend.onrender.com/api/posts/${postId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: currentUser.username, text: editPostText }) });
     setEditingPost(null); fetchData();
   };
 
   const handleAddComment = async (postId) => {
     const text = commentInputs[postId];
     if (!text) return;
-    await fetch(`http://localhost:3001/api/posts/${postId}/comments`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ author: currentUser.username, text }) });
+    await fetch(`https://vmptf-lab2-backend.onrender.com/api/posts/${postId}/comments`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ author: currentUser.username, text }) });
     setCommentInputs({ ...commentInputs, [postId]: '' }); fetchData();
   };
 
   const handleDeleteComment = async (postId, commentId) => {
     if (!window.confirm('Видалити коментар?')) return;
-    await fetch(`http://localhost:3001/api/posts/${postId}/comments/${commentId}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: currentUser.username }) });
+    await fetch(`https://vmptf-lab2-backend.onrender.com/api/posts/${postId}/comments/${commentId}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: currentUser.username }) });
     fetchData();
   };
 
   const handleSaveEditComment = async (postId, commentId) => {
-    await fetch(`http://localhost:3001/api/posts/${postId}/comments/${commentId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: currentUser.username, text: editCommentText }) });
+    await fetch(`https://vmptf-lab2-backend.onrender.com/api/posts/${postId}/comments/${commentId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: currentUser.username, text: editCommentText }) });
     setEditingComment(null); fetchData();
   };
 
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!searchQuery) { setSearchResults(null); return; }
-    const res = await fetch(`http://localhost:3001/api/search?q=${searchQuery}`);
+    const res = await fetch(`https://vmptf-lab2-backend.onrender.com/api/search?q=${searchQuery}`);
     setSearchResults(await res.json());
   };
 
   const handleAddFriend = async (friendName) => {
-    await fetch(`http://localhost:3001/api/users/${currentUser.username}/friends`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ friendName }) });
+    await fetch(`https://vmptf-lab2-backend.onrender.com/api/users/${currentUser.username}/friends`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ friendName }) });
     fetchData();
   };
 
   const fetchMessages = async () => {
-    const res = await fetch(`http://localhost:3001/api/messages/${currentUser.username}/${chatUser}`);
+    const res = await fetch(`https://vmptf-lab2-backend.onrender.com/api/messages/${currentUser.username}/${chatUser}`);
     setChatMessages(await res.json());
   };
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    await fetch('http://localhost:3001/api/messages', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sender: currentUser.username, receiver: chatUser, text: newMessageText }) });
+    await fetch('https://vmptf-lab2-backend.onrender.com/api/messages', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sender: currentUser.username, receiver: chatUser, text: newMessageText }) });
     setNewMessageText(''); fetchMessages();
   };
 
@@ -327,7 +327,7 @@ function App() {
                           <button 
                             type="button" 
                             onClick={async () => {
-                              await fetch(`http://localhost:3001/api/posts/${post.id}/likes`, {
+                              await fetch(`https://vmptf-lab2-backend.onrender.com/api/posts/${post.id}/likes`, {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({ username: currentUser.username })
